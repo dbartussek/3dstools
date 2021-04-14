@@ -350,11 +350,16 @@ int ElfConvert::Convert()
 
 	Elf32_Phdr* phdr = (Elf32_Phdr*)(img + le_word(ehdr->e_phoff));
 	baseAddr = 1, topAddr = 0;
-	if (le_hword(ehdr->e_phnum) > 3)
-		die("Too many segments!");
+	
+	// if (le_hword(ehdr->e_phnum) > 3)
+	//	die("Too many segments!");
+
 	for (int i = 0; i < le_hword(ehdr->e_phnum); i ++)
 	{
 		Elf32_Phdr* cur = phdr + i;
+		
+		if (cur->p_type == 0x70000001) continue;
+		
 		SegConv s;
 		s.fileOff = le_word(cur->p_offset);
 		s.flags = le_word(cur->p_flags);
